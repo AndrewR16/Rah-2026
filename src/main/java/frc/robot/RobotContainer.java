@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.constants.OperatorConstants;
+import frc.robot.motorspeeds.FeederSpeed;
+import frc.robot.motorspeeds.IntakeSpeed;
+import frc.robot.motorspeeds.LauncherSpeed;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -40,27 +43,27 @@ public class RobotContainer {
     // *Shoot fuel (Right Trigger)
     m_gunnerController.rightTrigger().whileTrue(
         new ParallelCommandGroup(
-            m_robotShooter.launcherForwardCommand(1),
-            m_robotShooter.feederForwardCommand(1)));
+            m_robotShooter.runLauncher(LauncherSpeed.MAX_FORWARD),
+            m_robotShooter.runFeeder(FeederSpeed.MAX_FORWARD)));
 
     // *Reverse shooter and intake (Left Trigger)
     m_gunnerController.leftTrigger().whileTrue(
         new ParallelCommandGroup(
-            m_robotShooter.launcherReverseCommand(1),
-            m_robotShooter.feederReverseCommand(1),
-            m_robotIntake.intakeReverseCommand(1)));
+            m_robotShooter.runLauncher(LauncherSpeed.MAX_REVERSE),
+            m_robotShooter.runFeeder(FeederSpeed.MAX_REVERSE),
+            m_robotIntake.runIntake(IntakeSpeed.MAX_REVERSE)));
 
     // *Start intake routine (Right Bumper)            
     m_gunnerController.rightBumper().onTrue(
       new ParallelCommandGroup(
-        m_robotShooter.launcherForwardCommand(0.5),
-        m_robotIntake.intakeForwardCommand(1)));
+        m_robotShooter.runLauncher(LauncherSpeed.INTAKE_SPEED),
+        m_robotIntake.runIntake(IntakeSpeed.MAX_FORWARD)));
     
     // *Stop intake routine (Left Bumper)
     m_gunnerController.leftBumper().onTrue(
       new ParallelCommandGroup(
-        m_robotShooter.launcherForwardCommand(0),
-        m_robotIntake.intakeForwardCommand(0)));
+        m_robotShooter.runLauncher(LauncherSpeed.STOP),
+        m_robotIntake.runIntake(IntakeSpeed.STOP)));
   }
 
   public Command getDriveCommand() {

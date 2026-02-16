@@ -5,11 +5,10 @@ import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.MotorCanIds;
-import frc.robot.constants.ShooterConstants;
-import frc.robot.math.RangeCheck;
+import frc.robot.motorspeeds.FeederSpeed;
+import frc.robot.motorspeeds.LauncherSpeed;
 import frc.robot.revconfigs.ShooterConfig;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -25,66 +24,27 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     /**
-     * General command to run the launcher motor forward (away from the robot).
+     * Run the launcher mechanism. 
      * 
-     * @param speed The speed to run as a percentage of the maximum forward speed.
-     *              Value should be between 0 and 1.0.
+     * @param speed The speed to run the launcher motor. Must be passed as a {@link LauncherSpeed}
+     * @return A command to run the motor and stop it when interupted
      */
-    public Command launcherForwardCommand(double speed) {
-        if (RangeCheck.requireInRange(speed, 0, 1) == false) {
-            return Commands.print("Improper speed value set for launcherForwardCommand");
-        }
-
+    public Command runLauncher(LauncherSpeed speed) {
         return this.startEnd(
-                () -> m_launcherMotor.set(ShooterConstants.kLauncherMaxForwardSpeed * speed),
+                () -> m_launcherMotor.set(speed.value()),
                 () -> m_launcherMotor.set(0));
     }
 
     /**
-     * General command to run the launcher motor in reverse (towards the robot).
+     * Run the feeder mechanism. 
      * 
-     * @param speed The speed to run as a percentage of the maximum reverse speed.
-     *              Value should be between 0 and 1.0.
+     * @param speed The speed to run the feeder motor. Must be passed as a {@link FeederSpeed}
+     * @return A command to run the motor and stop it when interupted
      */
-    public Command launcherReverseCommand(double speed) {
-        if (RangeCheck.requireInRange(speed, 0, 1) == false) {
-            return Commands.print("Improper speed value set for launcherReverseCommand");
-        }
-
+    public Command runFeeder(FeederSpeed speed) {
         return this.startEnd(
-                () -> m_launcherMotor.set(ShooterConstants.kLauncherMaxReverseSpeed * speed),
-                () -> m_launcherMotor.set(0));
-    }
-
-    /**
-     * General command to run the feeder motor forward (towards the launcher).
-     * 
-     * @param speed The speed to run as a percentage of the maximum forward speed.
-     *              Value should be between 0 and 1.0.
-     */
-    public Command feederForwardCommand(double speed) {
-        if (RangeCheck.requireInRange(speed, 0, 1) == false) {
-            return Commands.print("Improper speed value set for feederForwardCommand");
-        }
-
-        return this.startEnd(
-                () -> m_feederMotor.set(ShooterConstants.kFeederMaxForwardSpeed * speed),
+                () -> m_feederMotor.set(speed.value()),
                 () -> m_feederMotor.set(0));
-    }
 
-    /**
-     * General command to run the feeder motor in reverse (towards the hopper).
-     * 
-     * @param speed The speed to run as a percentage of the maximum reverse speed.
-     *              Value should be between 0 and 1.0.
-     */
-    public Command feederReverseCommand(double speed) {
-        if (RangeCheck.requireInRange(speed, 0, 1) == false) {
-            return Commands.print("Improper speed value set for feederReverseCommand");
-        }
-
-        return this.startEnd(
-                () -> m_feederMotor.set(ShooterConstants.kFeederMaxReverseSpeed * speed),
-                () -> m_feederMotor.set(0));
     }
 }
