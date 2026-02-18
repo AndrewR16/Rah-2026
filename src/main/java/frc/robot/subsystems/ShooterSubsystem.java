@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,8 +14,8 @@ import frc.robot.revconfigs.ShooterConfig;
 
 public class ShooterSubsystem extends SubsystemBase {
     // Motors
-    private final SparkMax m_launcherMotor = new SparkMax(MotorCanIds.kShooterCanId, null);
-    private final SparkMax m_feederMotor = new SparkMax(MotorCanIds.kHopperCanId, null);
+    private final SparkMax m_launcherMotor = new SparkMax(MotorCanIds.kShooterCanId, MotorType.kBrushless);
+    private final SparkMax m_feederMotor = new SparkMax(MotorCanIds.kHopperCanId, MotorType.kBrushless);
 
     public ShooterSubsystem() {
         m_launcherMotor.configure(ShooterConfig.launcherConfig, ResetMode.kResetSafeParameters,
